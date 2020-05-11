@@ -14,13 +14,20 @@ import com.salihkarahan.bundlenews.service.model.SaleInfoResponseModel;
 @Service
 public class SaleService {
 
+	private final RestTemplate restTemplate;
+	
+	public SaleService(
+			RestTemplate restTemplate
+			) {
+		this.restTemplate = restTemplate;
+	}
+	
 	@Async
 	public CompletableFuture<SaleInfoResponseModel> getSaleInfoById(SaleInfoRequestModel requestModel) {
 		final String endpointString = "http://5e209e06e31c6e0014c60962.mockapi.io/api/sales/{saleId}";
 		Map<String, String> endpointParameters = new HashMap<>();
 		endpointParameters.put("saleId", Long.toString(requestModel.getSaleId()));
-		RestTemplate restTemplate = new RestTemplate();
-		final SaleInfoResponseModel response = restTemplate.getForObject(endpointString, SaleInfoResponseModel.class, endpointParameters);
+		final SaleInfoResponseModel response = this.restTemplate.getForObject(endpointString, SaleInfoResponseModel.class, endpointParameters);
 		CompletableFuture<SaleInfoResponseModel> completableResponse = CompletableFuture.completedFuture(response);
 		return completableResponse;
 	}
